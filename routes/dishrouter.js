@@ -1,10 +1,43 @@
 // express router 
 const express = require('express');
 const bodyParser = require('body-parser'); 
+const mongoose = require('mongoose'); 
+
+const Dishes = require('../models/dishes'); 
+
+
 
 var dishRouter = express.Router();
 
 dishRouter.use(bodyParser.json());
+
+dishRouter.route('/')// we need to mount this on index.js file 
+// mounting an express router 
+// chain all the get,put, post methods 
+.get( (req, res, next) => {
+    Dishes.find({})
+        .then((dishes) => {
+            res.statusCode = 200; 
+            res.setHeader('Content-Type', 'application/json'); 
+            res.json(dishes);   // send it back over to the client 
+        }, (err) => next(err))
+})
+.post((req, res, next) => {
+    res.end('Will add the dish: '+ req.body.name + ' with details: '+ req.body.description); 
+
+})
+
+.put((req, res, next) => {
+    res.statusCode = 403;
+    res.end('PUT operation not supported on /dishes'); 
+
+})
+
+.delete( (req, res, next) => {
+    res.end('Deleting all the dishes!');
+
+});
+
 
 dishRouter.route('/:dishId')
 .get( (req, res, next) => {
@@ -21,37 +54,6 @@ dishRouter.route('/:dishId')
 })
 .delete((req, res, next) => {
     res.end('Deleting dish: '+req.params.dishId);
-});
-
-dishRouter.route('/')// we need to mount this on index.js file 
-// mounting an express router 
-// chain all the get,put, post methods 
-.all((req, res, next) => {
-    res.statusCode = 200; 
-    res.setHeader('Content-Type', 'text/plain');
-    next();
-
-})
-
-.get( (req, res, next) => {
-    res.end('Will send all the dishes to you!');
-
-})
-
-.post((req, res, next) => {
-    res.end('Will add the dish: '+ req.body.name + ' with details: '+ req.body.description); 
-
-})
-
-.put((req, res, next) => {
-    res.statusCode = 403;
-    res.end('PUT operation not supported on /dishes'); 
-
-})
-
-.delete( (req, res, next) => {
-    res.end('Deleting all the dishes!');
-
 });
 
 

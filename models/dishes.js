@@ -1,5 +1,11 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+require('mongoose-currency').loadType(mongoose);
+const Currency = mongoose.Types.Currency; 
+// this is a new type that we have declared 
+// this new currency type is added into Mongoose and that will add in a new type called currency 
+// So we can make use of this in defining the schema in our application 
+
 
 
 const commentSchema = new Schema({
@@ -32,6 +38,27 @@ const dishSchema = new Schema({
     description: {
         type: String,
         required: true
+    },
+    image: {
+        type: String,
+        required: true, 
+    },
+    category: {
+        type: String, 
+        required: true, 
+    },
+    label: {
+        type: String, 
+        default: '', 
+    },
+    price: {
+        type: Currency, 
+        required: true, 
+        min: 0, 
+    }, 
+    featured: {
+        type: Boolean, 
+        default: false
     },
     comments: [ commentSchema ] // array of commentSchema - comment document becomes a subdocument of dish
     // usage of subdocument of mongoose

@@ -16,6 +16,14 @@ const mongoose = require('mongoose');
 const Dishes = require('./models/dishes'); 
 
 // now we need to establish a connection with a server 
+const url = 'mongodb://localhost:27017/conFusion';
+const connect = mongoos.connect(url); 
+
+connect.then((db) => {
+  console.log("Connected correctly to server"); 
+
+}, (err) => { console.log(err);});
+
 
 var app = express();
 
