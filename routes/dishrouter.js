@@ -15,16 +15,23 @@ dishRouter.route('/')// we need to mount this on index.js file
 // mounting an express router 
 // chain all the get,put, post methods 
 .get( (req, res, next) => {
-    Dishes.find({})
+    Dishes.find({}) // get all dishes 
         .then((dishes) => {
             res.statusCode = 200; 
             res.setHeader('Content-Type', 'application/json'); 
             res.json(dishes);   // send it back over to the client 
         }, (err) => next(err))
+        .catch((err) => next(err)); // this is not an overall handler for the application 
 })
 .post((req, res, next) => {
-    res.end('Will add the dish: '+ req.body.name + ' with details: '+ req.body.description); 
-
+    Dishes.create(req.body)
+    .then((dish) => {
+        console.log('Dish Created ', dish); 
+        res.statusCode = 200; 
+        res.setHeader('Content-Type', 'application/json'); 
+        res.json(dish); 
+    }, (err) => next(err))
+    .catch((err) => next(err));
 })
 
 .put((req, res, next) => {
@@ -34,13 +41,27 @@ dishRouter.route('/')// we need to mount this on index.js file
 })
 
 .delete( (req, res, next) => {
-    res.end('Deleting all the dishes!');
+    Dishes.remove({})
+    .then((resp) => {
+        res.statusCode = 200; 
+        res.setHeader('Content-Type', 'application/json'); 
+        res.json(resp);
+    }, (err) => next(err))
+    .catch((err) => next(err));
 
 });
 
 
 dishRouter.route('/:dishId')
 .get( (req, res, next) => {
+    Dishes.findById(req.params.dishId)
+    .then((dishes) => {
+        res.statusCode = 200; 
+        res.setHeader('Content-Type', 'application/json'); 
+        res.json(dishes);   // send it back over to the client 
+    }, (err) => next(err))
+    .catch((err) => next(err)); 
+
     res.end('Will send details of the dish: ' + req.params.dishId + ' to you!');
 })
 .post((req, res, next) => {
